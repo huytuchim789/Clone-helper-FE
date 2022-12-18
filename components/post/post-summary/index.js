@@ -58,7 +58,9 @@ const PostSummary = ({
           onSubmit={async (values, { setStatus, resetForm }) => {
             try {
               const { data } = await authAxios.put(
-                `/answer/${questionId}/${answerId ? answerId : ''}`,
+                answerId
+                  ? `/answer/${questionId}/${answerId}`
+                  : `/answer/${questionId}/${questionId}`,
                 values
               )
               setQuestion(data)
@@ -160,7 +162,11 @@ const PostSummary = ({
               >
                 delete
               </a>
-              <a onClick={() => hadnleEditComment()}>edit</a>
+              {answerId ? (
+                <a onClick={() => hadnleEditComment()}>edit</a>
+              ) : (
+                <></>
+              )}
             </Space>
           )
         )}
