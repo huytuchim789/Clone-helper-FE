@@ -10,11 +10,11 @@ import QuestionStats from '../components/question/question-stats'
 import QuestionSummary from '../components/question/question-summary'
 import PageTitle from '../components/page-title'
 import ButtonGroup from '../components/button-group'
+import NotFound from '../components/not-found-result'
 import { Spinner } from '../components/icons'
 import { Pagination } from "antd";
 
-
-const HomePage = () => {
+const SearchQuestion = () => {
 
   const router = useRouter()
 
@@ -24,16 +24,17 @@ const HomePage = () => {
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
 
+
   useEffect(() => {
     const fetchQuestion = async () => {
       setLoading(true)
+
       try {
-        const res = await publicFetch.get(`/question?page=${page}`)
+        const res = await publicFetch.get(`/question?key=${router.query.key}&&page=${page}`)
         const {data, total: totalQuestions} = await res.data
         
-        setTotal(totalQuestions)
         setQuestions(data)
-        console.log(data)
+        setTotal(totalQuestions)
       } catch (error){
         console.log(error)
       }
@@ -51,7 +52,8 @@ const HomePage = () => {
       fetchQuestion()
     }
     setLoading(false)
-  }, [router.query.tag, page])
+
+  }, [router.query.tag, page, router.query.key])
 
   const handelChange = (page) => {
     setPage(page)
@@ -72,6 +74,7 @@ const HomePage = () => {
     }
   }
 
+
   return (
     <Layout extra={false}>
       <Head>
@@ -81,7 +84,7 @@ const HomePage = () => {
         </title>
       </Head>
 
-      <PageTitle title={router.query.tag ? `Questions tagged [${router.query.tag}]` : 'All Questions'} button borderBottom={false} />
+      <PageTitle title={`Search result for [${router.query.key}]` } button borderBottom={false} />
 
       <ButtonGroup
         borderBottom
@@ -129,15 +132,16 @@ const HomePage = () => {
             </QuestionWrapper>
           )
         )}
-          <Pagination
+        {/* <Pagination page={page} pages={pages} changePage={setPage} /> */}
+        {total != 0 ? <Pagination
           pageSize={10}
           current={page}
           total={total}
           onChange={handelChange}
-          style={{ textAlign: "center" }}
-        />
+          style={{ textAlign: "center", margin: 20}}
+        /> : <NotFound />}
     </Layout>
   )
 }
 
-export default HomePage
+export default SearchQuestion

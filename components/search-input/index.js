@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react'
+import { useRouter } from 'next/router'
 import cn from 'classnames'
 
 import { Search } from '../icons'
@@ -9,17 +10,26 @@ const SearchInput = ({
   fullWidth,
   autoFocus,
   marginLeft = true,
+  isKeyDown = false,
   isLoading = false,
   className,
   ...props
 }) => {
   const ref = useRef(null)
+  const router = useRouter()
 
   useEffect(() => {
     if (autoFocus) {
       ref.current.focus()
     }
   }, [ref])
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      router.push(`/search?key=${event.target.value}`)
+      console.log('key', event.target.value)
+    }
+  };
 
   return (
     <div
@@ -38,6 +48,7 @@ const SearchInput = ({
           className
         )}
         {...props}
+        onKeyDown={isKeyDown && handleKeyDown}
       />
       <Search className={styles.search} />
     </div>

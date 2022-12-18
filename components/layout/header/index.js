@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react'
+import React, { useEffect, useContext, useState } from 'react'
 import Link from 'next/link'
 import cn from 'classnames'
 
@@ -11,12 +11,14 @@ import { AuthContext } from '../../../store/auth'
 import Button from '../../button'
 import NavigationDropdown from '../../navigation-dropdown'
 import { Menu, Close, Logo } from '../../icons'
+import SearchInput from '../../search-input'
 
 import styles from './header.module.css'
 
 const Header = ({ className, ...props }) => {
   const { handleComponentVisible } = useContext(ModalContext)
   const { isAuthenticated, authState, logout } = useContext(AuthContext)
+  const { key, setKey } = useState('')
 
   const {
     ref,
@@ -46,14 +48,23 @@ const Header = ({ className, ...props }) => {
         <Button className={styles.logo} href="/">
           <Logo />
           <p>
-            clone-of-stack<span>overflow</span>
+            Coding<span>Helper</span>
           </p>
         </Button>
-        <div style={{ flex: 1 }}></div>
+          <SearchInput
+            style={{ flex: 1, marginRight: 50, maxWidth: 700 }}
+            placeholder="Search..."
+            // isLoading={loading}
+            autoFocus
+            fullWidth={true}
+            isKeyDown={true}
+            autoComplete="off"
+            type="text"
+          />
 
         {isAuthenticated() ? (
           <div className={styles.userInfo}>
-            <p>
+            <div  style={{ display: 'inline' }}>
               Welcome{' '}
               <Link
                 href="/users/[user]"
@@ -61,7 +72,7 @@ const Header = ({ className, ...props }) => {
               >
                 <a>{authState.userInfo.username}!</a>
               </Link>
-            </p>
+            </div>
             <a onClick={() => logout()}>log out</a>
           </div>
         ) : (
