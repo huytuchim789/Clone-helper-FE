@@ -52,7 +52,7 @@ class MyDocument extends Document {
           ></script>
 
           {/* favicon */}
-          <link rel="shortcut icon" href="/images/logo.svg" />
+          <link rel="shortcut icon" />
         </Head>
         <body>
           <Main />
