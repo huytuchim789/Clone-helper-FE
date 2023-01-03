@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ant-design/icons": "^4.8.0",
     "antd": "^5.0.7",
     "axios": "^0.21.1",
     "babel-plugin-react-require": "^3.1.3",

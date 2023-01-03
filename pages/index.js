@@ -11,7 +11,8 @@ import QuestionSummary from '../components/question/question-summary'
 import PageTitle from '../components/page-title'
 import ButtonGroup from '../components/button-group'
 import { Spinner } from '../components/icons'
-import { Pagination } from "antd";
+import { Button, Pagination } from "antd";
+import { SearchOutlined } from '@ant-design/icons';
 
 
 const HomePage = () => {
