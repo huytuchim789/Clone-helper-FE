@@ -20,7 +20,7 @@ const PageTitle = ({
   const { authAxios } = useContext(FetchContext)
   const blockQuestion = async () => {
     authAxios
-      .put(`/blocked/${question?.id}`)
+      .put(`/blocked/question/${question?.id}`)
       .then((res) => {
         console.log(res)
         message.success('Successfully Blocked')
