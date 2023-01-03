@@ -20,12 +20,8 @@ const Header = ({ className, ...props }) => {
   const { isAuthenticated, authState, logout } = useContext(AuthContext)
   const { key, setKey } = useState('')
 
-  const {
-    ref,
-    toggleRef,
-    isComponentVisible,
-    setIsComponentVisible
-  } = useComponentVisible(false)
+  const { ref, toggleRef, isComponentVisible, setIsComponentVisible } =
+    useComponentVisible(false)
   const size = useWindowSize()
 
   useEffect(() => {
@@ -51,20 +47,20 @@ const Header = ({ className, ...props }) => {
             Coding<span>Helper</span>
           </p>
         </Button>
-          <SearchInput
-            style={{ flex: 1, marginRight: 50, maxWidth: 700 }}
-            placeholder="Search..."
-            // isLoading={loading}
-            autoFocus
-            fullWidth={true}
-            isKeyDown={true}
-            autoComplete="off"
-            type="text"
-          />
+        <SearchInput
+          style={{ flex: 1, marginRight: 50, maxWidth: 700 }}
+          placeholder="Search..."
+          // isLoading={loading}
+          autoFocus
+          fullWidth={true}
+          isKeyDown={true}
+          autoComplete="off"
+          type="text"
+        />
 
         {isAuthenticated() ? (
           <div className={styles.userInfo}>
-            <div  style={{ display: 'inline' }}>
+            <div style={{ display: 'inline' }}>
               Welcome{' '}
               <Link
                 href="/users/[user]"
