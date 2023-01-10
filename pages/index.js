@@ -16,7 +16,6 @@ import { SearchOutlined } from '@ant-design/icons';
 
 
 const HomePage = () => {
-
   const router = useRouter()
 
   const [questions, setQuestions] = useState(null)
@@ -30,15 +29,14 @@ const HomePage = () => {
       setLoading(true)
       try {
         const res = await publicFetch.get(`/question?page=${page}`)
-        const {data, total: totalQuestions} = await res.data
-        
+        const { data, total: totalQuestions } = await res.data
+
         setTotal(totalQuestions)
         setQuestions(data)
         console.log(data)
-      } catch (error){
+      } catch (error) {
         console.log(error)
       }
-
     }
 
     const fetchQuestionByTag = async () => {
@@ -77,16 +75,23 @@ const HomePage = () => {
     <Layout extra={false}>
       <Head>
         <title>
-          {router.query.tag ? router.query.tag : 'Questions'} -
-          CodingHelper
+          {router.query.tag ? router.query.tag : 'Questions'} - CodingHelper
         </title>
       </Head>
 
-      <PageTitle title={router.query.tag ? `Questions tagged [${router.query.tag}]` : 'All Questions'} button borderBottom={false} />
+      <PageTitle
+        title={
+          router.query.tag
+            ? `Questions tagged [${router.query.tag}]`
+            : 'All Questions'
+        }
+        button
+        borderBottom={false}
+      />
 
       <ButtonGroup
         borderBottom
-        buttons={['Newest', 'Oldest', 'Highest Vote', 'Highest View', ]}
+        buttons={['Newest', 'Oldest', 'Highest Vote', 'Highest View']}
         selected={sortType}
         setPage={setPage}
         setSelected={setSortType}
@@ -100,6 +105,7 @@ const HomePage = () => {
 
       {questions
         ?.sort(handleSorting())
+        .filter((a) => !a?.isBlocked)
         .map(
           ({
             id,
@@ -130,13 +136,13 @@ const HomePage = () => {
             </QuestionWrapper>
           )
         )}
-          <Pagination
-          pageSize={10}
-          current={page}
-          total={total}
-          onChange={handelChange}
-          style={{ textAlign: "center" }}
-        />
+      <Pagination
+        pageSize={10}
+        current={page}
+        total={total}
+        onChange={handelChange}
+        style={{ textAlign: 'center' }}
+      />
     </Layout>
   )
 }

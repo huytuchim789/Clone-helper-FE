@@ -31,6 +31,13 @@ const Navigation = () => {
       >
         <span>Users</span>
       </NavItem>
+      
+      <NavItem
+        href="/blog"
+        selected={router.pathname.split('/')[1] == 'blog'}
+      >
+        <span>Blog</span>
+      </NavItem>
     </nav>
   )
 }

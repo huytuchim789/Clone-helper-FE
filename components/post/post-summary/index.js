@@ -22,7 +22,8 @@ const PostSummary = ({
   questionId,
   answerId,
   setQuestion,
-  children
+  children,
+  button
 }) => {
   const { authState, isAdmin } = useContext(AuthContext)
   const { authAxios } = useContext(FetchContext)
