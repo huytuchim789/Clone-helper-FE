@@ -14,12 +14,20 @@ import { message } from 'antd'
 import { FetchContext } from '../../../store/fetch'
 import { Modal } from 'antd'
 
-const { error } = Modal
 const UserAvatar = ({ username }) => {
   const [userInfo, setUserInfo] = useState(null)
+  const [isFollow, setIsFollow] = useState(false)
   const { isAdmin } = useContext(AuthContext)
   const { authAxios } = useContext(FetchContext)
-
+  useEffect(() => {
+    if (userInfo?.id)
+      authAxios
+        .get(`/is-follow`, { params: { followee: userInfo?.id } })
+        .then((res) => {
+          setIsFollow(res.data.isFollow)
+        })
+        .catch(() => {})
+  }, [userInfo])
   const blockUser = async () => {
     authAxios
       .put(`/blocked/user/${userInfo?.id}`)
@@ -33,6 +41,20 @@ const UserAvatar = ({ username }) => {
         history.back()
       })
   }
+  const follow = async () => {
+    authAxios
+      .post(`/follow`, {
+        followee: userInfo.id
+      })
+      .then((res) => {
+        console.log(res)
+        setIsFollow(res?.data?.isFollow)
+        message.success(res?.data?.msg)
+      })
+      .catch(() => {
+        message.error('Failed')
+      })
+  }
   useEffect(() => {
     const fetchUser = async () => {
       const { data } = await publicFetch.get(`/user/${username}`)
@@ -41,7 +63,7 @@ const UserAvatar = ({ username }) => {
 
     fetchUser()
   }, [username])
- 
+
   return (
     <div>
       {userInfo?.isBlocked ? (
@@ -95,6 +117,13 @@ const UserAvatar = ({ username }) => {
                   Block
                 </Button>
               )}
+              <Button
+                style={{ backgroundColor: 'orange' }}
+                primary
+                onClick={follow}
+              >
+                {`${isFollow ? 'Unfollow' : 'Follow'}`}
+              </Button>
             </div>
           )}
         </div>
