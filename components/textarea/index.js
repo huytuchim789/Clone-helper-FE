@@ -1,9 +1,8 @@
 import React from 'react'
 
 import cn from 'classnames'
-
+import dynamic from 'next/dynamic'
 import styles from './textarea.module.css'
-
 const TextArea = ({
   label,
   inputInfo,

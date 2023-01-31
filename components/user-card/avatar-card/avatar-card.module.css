@@ -31,6 +31,7 @@
   text-align: center;
   p {
     font-family: monospace;
+    margin-bottom: 10px;
   }
 
   span {

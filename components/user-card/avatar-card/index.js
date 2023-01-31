@@ -10,10 +10,11 @@ import { Spinner } from '../../icons'
 import styles from './avatar-card.module.css'
 import { AuthContext } from '../../../store/auth'
 import Button from '../../button'
-import { message } from 'antd'
+import { Space, Typography, message } from 'antd'
 import { FetchContext } from '../../../store/fetch'
 import { Modal } from 'antd'
 
+const { Paragraph } = Typography
 const UserAvatar = ({ username }) => {
   const [userInfo, setUserInfo] = useState(null)
   const [isFollow, setIsFollow] = useState(false)
@@ -94,37 +95,54 @@ const UserAvatar = ({ username }) => {
             </div>
           )}
           <h2 className={styles.username}>{username}</h2>
+          <h2 className={styles.username}>
+            {userInfo ? `(${userInfo?.displayName})` : ''}
+          </h2>
+
           {!userInfo ? (
             <div className="loading">
               <Spinner />
             </div>
           ) : (
-            <div className={styles.created}>
-              <p>
-                Created:{' '}
-                <span>
-                  {formatDistanceToNowStrict(new Date(userInfo.created), {
-                    addSuffix: true
-                  })}
-                </span>
-              </p>
-              {isAdmin && (
-                <Button
-                  style={{ backgroundColor: 'red' }}
-                  primary
-                  onClick={blockUser}
-                >
-                  Block
-                </Button>
-              )}
-              <Button
-                style={{ backgroundColor: 'orange' }}
-                primary
-                onClick={follow}
+            <Space direction="vertical" style={{ marginTop: '20px' }}>
+              <Paragraph
+                ellipsis={{
+                  rows: 2,
+                  expandable: false,
+                  tooltip: userInfo?.profile
+                }}
               >
-                {`${isFollow ? 'Unfollow' : 'Follow'}`}
-              </Button>
-            </div>
+                <div
+                  dangerouslySetInnerHTML={{ __html: userInfo?.profile }}
+                ></div>
+              </Paragraph>
+              <div className={styles.created}>
+                <p>
+                  Created:{' '}
+                  <span>
+                    {formatDistanceToNowStrict(new Date(userInfo.created), {
+                      addSuffix: true
+                    })}
+                  </span>
+                </p>
+                {isAdmin && (
+                  <Button
+                    style={{ backgroundColor: 'red' }}
+                    primary
+                    onClick={blockUser}
+                  >
+                    Block
+                  </Button>
+                )}
+                <Button
+                  style={{ backgroundColor: 'orange', marginLeft: '15px' }}
+                  primary
+                  onClick={follow}
+                >
+                  {`${isFollow ? 'Unfollow' : 'Follow'}`}
+                </Button>
+              </div>
+            </Space>
           )}
         </div>
       )}
