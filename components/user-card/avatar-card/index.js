@@ -18,8 +18,9 @@ const { Paragraph } = Typography
 const UserAvatar = ({ username }) => {
   const [userInfo, setUserInfo] = useState(null)
   const [isFollow, setIsFollow] = useState(false)
-  const { isAdmin } = useContext(AuthContext)
+  const { authState } = useContext(AuthContext)
   const { authAxios } = useContext(FetchContext)
+  console.log(authState)
   useEffect(() => {
     if (userInfo?.id)
       authAxios
@@ -87,7 +88,8 @@ const UserAvatar = ({ username }) => {
               <Link href="/users/[username]" as={`/users/${username}`}>
                 <a>
                   <img
-                    src={`https://secure.gravatar.com/avatar/${userInfo.id}?s=164&d=identicon`}
+                    style={{ width: '100%' }}
+                    src={userInfo.profilePhoto}
                     alt={username}
                   />
                 </a>
@@ -96,7 +98,7 @@ const UserAvatar = ({ username }) => {
           )}
           <h2 className={styles.username}>{username}</h2>
           <h2 className={styles.username}>
-            {userInfo ? `(${userInfo?.displayName})` : ''}
+            {userInfo?.displayName ? `(${userInfo?.displayName})` : ''}
           </h2>
 
           {!userInfo ? (
@@ -125,22 +127,27 @@ const UserAvatar = ({ username }) => {
                     })}
                   </span>
                 </p>
-                {isAdmin && (
-                  <Button
-                    style={{ backgroundColor: 'red' }}
-                    primary
-                    onClick={blockUser}
-                  >
-                    Block
-                  </Button>
+                {authState?.userInfo?.id !== userInfo.id && (
+                  <>
+                    {' '}
+                    {authState?.userInfo.role && (
+                      <Button
+                        style={{ backgroundColor: 'red' }}
+                        primary
+                        onClick={blockUser}
+                      >
+                        Block
+                      </Button>
+                    )}
+                    <Button
+                      style={{ backgroundColor: 'orange', marginLeft: '15px' }}
+                      primary
+                      onClick={follow}
+                    >
+                      {`${isFollow ? 'Unfollow' : 'Follow'}`}
+                    </Button>
+                  </>
                 )}
-                <Button
-                  style={{ backgroundColor: 'orange', marginLeft: '15px' }}
-                  primary
-                  onClick={follow}
-                >
-                  {`${isFollow ? 'Unfollow' : 'Follow'}`}
-                </Button>
               </div>
             </Space>
           )}
