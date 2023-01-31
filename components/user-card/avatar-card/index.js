@@ -127,27 +127,31 @@ const UserAvatar = ({ username }) => {
                     })}
                   </span>
                 </p>
-                {authState?.userInfo?.id !== userInfo.id && (
-                  <>
-                    {' '}
-                    {authState?.userInfo.role && (
+                {authState?.userInfo?.id !== userInfo?.id &&
+                  Object.keys(authState).length > 0 && (
+                    <>
+                      {' '}
+                      {authState?.userInfo?.role === 'admin' && (
+                        <Button
+                          style={{ backgroundColor: 'red' }}
+                          primary
+                          onClick={blockUser}
+                        >
+                          Block
+                        </Button>
+                      )}
                       <Button
-                        style={{ backgroundColor: 'red' }}
+                        style={{
+                          backgroundColor: 'orange',
+                          marginLeft: '15px'
+                        }}
                         primary
-                        onClick={blockUser}
+                        onClick={follow}
                       >
-                        Block
+                        {`${isFollow ? 'Unfollow' : 'Follow'}`}
                       </Button>
-                    )}
-                    <Button
-                      style={{ backgroundColor: 'orange', marginLeft: '15px' }}
-                      primary
-                      onClick={follow}
-                    >
-                      {`${isFollow ? 'Unfollow' : 'Follow'}`}
-                    </Button>
-                  </>
-                )}
+                    </>
+                  )}
               </div>
             </Space>
           )}
