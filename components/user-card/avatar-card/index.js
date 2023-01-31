@@ -10,16 +10,25 @@ import { Spinner } from '../../icons'
 import styles from './avatar-card.module.css'
 import { AuthContext } from '../../../store/auth'
 import Button from '../../button'
-import { message } from 'antd'
+import { Space, Typography, message } from 'antd'
 import { FetchContext } from '../../../store/fetch'
 import { Modal } from 'antd'
 
-const { error } = Modal
+const { Paragraph } = Typography
 const UserAvatar = ({ username }) => {
   const [userInfo, setUserInfo] = useState(null)
+  const [isFollow, setIsFollow] = useState(false)
   const { isAdmin } = useContext(AuthContext)
   const { authAxios } = useContext(FetchContext)
-
+  useEffect(() => {
+    if (userInfo?.id)
+      authAxios
+        .get(`/is-follow`, { params: { followee: userInfo?.id } })
+        .then((res) => {
+          setIsFollow(res.data.isFollow)
+        })
+        .catch(() => {})
+  }, [userInfo])
   const blockUser = async () => {
     authAxios
       .put(`/blocked/user/${userInfo?.id}`)
@@ -33,6 +42,20 @@ const UserAvatar = ({ username }) => {
         history.back()
       })
   }
+  const follow = async () => {
+    authAxios
+      .post(`/follow`, {
+        followee: userInfo.id
+      })
+      .then((res) => {
+        console.log(res)
+        setIsFollow(res?.data?.isFollow)
+        message.success(res?.data?.msg)
+      })
+      .catch(() => {
+        message.error('Failed')
+      })
+  }
   useEffect(() => {
     const fetchUser = async () => {
       const { data } = await publicFetch.get(`/user/${username}`)
@@ -41,7 +64,7 @@ const UserAvatar = ({ username }) => {
 
     fetchUser()
   }, [username])
- 
+
   return (
     <div>
       {userInfo?.isBlocked ? (
@@ -72,30 +95,54 @@ const UserAvatar = ({ username }) => {
             </div>
           )}
           <h2 className={styles.username}>{username}</h2>
+          <h2 className={styles.username}>
+            {userInfo ? `(${userInfo?.displayName})` : ''}
+          </h2>
+
           {!userInfo ? (
             <div className="loading">
               <Spinner />
             </div>
           ) : (
-            <div className={styles.created}>
-              <p>
-                Created:{' '}
-                <span>
-                  {formatDistanceToNowStrict(new Date(userInfo.created), {
-                    addSuffix: true
-                  })}
-                </span>
-              </p>
-              {isAdmin && (
+            <Space direction="vertical" style={{ marginTop: '20px' }}>
+              <Paragraph
+                ellipsis={{
+                  rows: 2,
+                  expandable: false,
+                  tooltip: userInfo?.profile
+                }}
+              >
+                <div
+                  dangerouslySetInnerHTML={{ __html: userInfo?.profile }}
+                ></div>
+              </Paragraph>
+              <div className={styles.created}>
+                <p>
+                  Created:{' '}
+                  <span>
+                    {formatDistanceToNowStrict(new Date(userInfo.created), {
+                      addSuffix: true
+                    })}
+                  </span>
+                </p>
+                {isAdmin && (
+                  <Button
+                    style={{ backgroundColor: 'red' }}
+                    primary
+                    onClick={blockUser}
+                  >
+                    Block
+                  </Button>
+                )}
                 <Button
-                  style={{ backgroundColor: 'red' }}
+                  style={{ backgroundColor: 'orange', marginLeft: '15px' }}
                   primary
-                  onClick={blockUser}
+                  onClick={follow}
                 >
-                  Block
+                  {`${isFollow ? 'Unfollow' : 'Follow'}`}
                 </Button>
-              )}
-            </div>
+              </div>
+            </Space>
           )}
         </div>
       )}

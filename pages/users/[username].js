@@ -30,6 +30,7 @@ const UserDetail = ({ username }) => {
 
       <UserCard>
         <AvatarCard username={username} />
+
         <PostList postType={postType} setPostType={setPostType}>
           {!posts && (
             <div className="loading">

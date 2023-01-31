@@ -65,12 +65,13 @@ function UsersPage() {
           <UserList>
             {users
               .filter((u) => !u?.isBlocked)
-              ?.map(({ username, profilePhoto, created, id }) => (
+              ?.map(({ username, profilePhoto, created, id, displayName }) => (
                 <UserItem
                   key={id}
                   username={username}
                   profilePhoto={profilePhoto}
                   created={created}
+                  displayName={displayName}
                 />
               ))}
           </UserList>

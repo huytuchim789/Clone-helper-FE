@@ -1,0 +1,7 @@
+.container {
+  height: 100%;
+}
+.upload {
+  display: flex !important;
+  justify-content: center;
+}
