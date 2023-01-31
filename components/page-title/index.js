@@ -12,12 +12,13 @@ import { FetchContext } from '../../store/fetch'
 const PageTitle = ({
   title,
   button,
-  isBlog,
+  isBlog = false,
   borderBottom = true,
   question,
-  children
+  children,
+  blogId
 }) => {
-  const { isAuthenticated, isAdmin } = useContext(AuthContext)
+  const { isAuthenticated, authState, isAdmin } = useContext(AuthContext)
   const { authAxios } = useContext(FetchContext)
   const blockQuestion = async () => {
     authAxios
@@ -59,6 +60,12 @@ const PageTitle = ({
                 primary
               >
                 Create my Blog
+              </Button>}
+              {isBlog && authState.userInfo?.username === question?.author?.username && <Button
+                href={isAuthenticated() ? `/blog/${blogId}/edit` : '/auth'}
+                secondary
+              >
+                Edit
               </Button>}
             </Space>
           )}

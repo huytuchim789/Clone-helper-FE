@@ -26,18 +26,18 @@ const AddComment = ({
       onSubmit={async (values, { setStatus, resetForm }) => {
         setLoading(true)
         try {
-          // const { data } = await authAxios.post(
+          const { data } = await authAxios.post(
+            `/comment-blog/${questionId}/${answerId ? answerId : ''}`,
+            values
+          )
+
+          // const { data } = isBlog ? await authAxios.post(
+          //   `/comment/${questionId}/${answerId ? answerId : ''}`,
+          //   values
+          // ) : await authAxios.post(
           //   `/comment/${questionId}/${answerId ? answerId : ''}`,
           //   values
           // )
-
-          const { data } = isBlog ? await authAxios.post(
-            `/comment/${questionId}/${answerId ? answerId : ''}`,
-            values
-          ) : await authAxios.post(
-            `/comment/${questionId}/${answerId ? answerId : ''}`,
-            values
-          )
 
           setQuestion(data)
 

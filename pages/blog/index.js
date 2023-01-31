@@ -12,6 +12,7 @@ import BlogStats from '../../components/blog/blog-stats'
 import BlogSummary from '../../components/blog/blog-summary'
 import { Button, Pagination } from "antd";
 import { SearchOutlined } from '@ant-design/icons'
+import SearchInput from '../../components/search-input'
 
 function Blog() {
     const router = useRouter()
@@ -60,7 +61,17 @@ function Blog() {
                     <Spinner />
                 </div>
             )}
-
+            <SearchInput
+                style={{ flex: 1, marginRight: 50, maxWidth: 700 }}
+                placeholder="Search Blog ..."
+                // isLoading={loading}
+                isSearchBlog={true}
+                autoFocus
+                fullWidth={true}
+                isKeyDown={true}
+                autoComplete="off"
+                type="text"
+            />
             {blogs
                 ?.map(
                     ({

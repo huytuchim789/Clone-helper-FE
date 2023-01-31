@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 
-import { publicFetch } from '../../util/fetcher'
+import { publicFetch } from '../../../util/fetcher'
 
-import Layout from '../../components/layout'
-import PageTitle from '../../components/page-title'
-import DetailPageContainer from '../../components/detail-page-container'
-import PostWrapper from '../../components/post/post-wrapper'
-import PostVote from '../../components/post/post-vote'
-import PostSummary from '../../components/post/post-summary'
-import CommentList from '../../components/post/comment-list'
-import CommentItem from '../../components/post/comment-list/comment-item'
-import AnswerContainer from '../../components/answer-container'
-import AddAnswer from '../../components/add-answer'
-import { Spinner } from '../../components/icons'
+import Layout from '../../../components/layout'
+import PageTitle from '../../../components/page-title'
+import DetailPageContainer from '../../../components/detail-page-container'
+import PostWrapper from '../../../components/blog-post/post-wrapper'
+import PostVote from '../../../components/blog-post/post-vote'
+import PostSummary from '../../../components/blog-post/post-summary'
+import CommentList from '../../../components/blog-post/comment-list'
+import CommentItem from '../../../components/blog-post/comment-list/comment-item'
+import AnswerContainer from '../../../components/answer-container'
+import AddAnswer from '../../../components/add-answer'
+import { Spinner } from '../../../components/icons'
 import { Result } from 'antd'
 
 const BlogDetail = ({ questionId, title }) => {
@@ -23,6 +23,7 @@ const BlogDetail = ({ questionId, title }) => {
     useEffect(() => {
       const fetchQuestion = async () => {
         const { data } = await publicFetch.get(`/blog-by-id/?id=${questionId}`)
+        console.log('>>>dt', data);
         setQuestion(data)
       }
   
@@ -39,7 +40,7 @@ const BlogDetail = ({ questionId, title }) => {
   
         {question ? (
           <>
-            <PageTitle title={title} button isBlog={true} question={question} />
+            <PageTitle title={title} button isBlog={true} question={question} blogId={questionId} />
   
             <DetailPageContainer>
               {!question && (
@@ -51,12 +52,6 @@ const BlogDetail = ({ questionId, title }) => {
               {question && (
                 <>
                   <PostWrapper borderBottom={false}>
-                    {/* <PostVote
-                      score={question.score}
-                      votes={question.votes}
-                      questionId={questionId}
-                      setQuestion={setQuestion}
-                    /> */}
                     <PostSummary
                       tags={question.tags}
                       author={question.author}
@@ -65,6 +60,7 @@ const BlogDetail = ({ questionId, title }) => {
                     >
                       {question.text}
                     </PostSummary>
+                    
                     <CommentList
                       questionId={questionId}
                       setQuestion={setQuestion}

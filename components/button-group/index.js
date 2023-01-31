@@ -11,6 +11,7 @@ import { Col, Row, Checkbox, Select } from 'antd';
 const ButtonGroup = ({
   buttons,
   selected,
+  isFilter=true,
   setSelected,
   borderBottom = false
 }) => {
@@ -29,7 +30,7 @@ const ButtonGroup = ({
           {button}
         </Button>
       ))}
-      <Button style={{marginLeft:20,  borderRadius: 3}} onClick={() => setShowFilter(true)}>Filter</Button>
+      {isFilter && <Button style={{marginLeft:20,  borderRadius: 3}} onClick={() => setShowFilter(true)}>Filter</Button>}
     </div>
     {showFilter && 
       <Row >
