@@ -19,7 +19,8 @@ const CustomEditor = ({
   placeholder,
   className,
   label,
-  setFieldValue
+  setFieldValue,
+  keyField
 }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
   const [updated, setUpdated] = useState(false)
@@ -41,7 +42,7 @@ const CustomEditor = ({
     setUpdated(true)
     setEditorState(editorState)
     setFieldValue(
-      'profile',
+      keyField,
       draftToHtml(convertToRaw(editorState.getCurrentContent()))
     )
     return onChange(draftToHtml(convertToRaw(editorState.getCurrentContent())))

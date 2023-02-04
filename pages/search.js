@@ -12,33 +12,39 @@ import PageTitle from '../components/page-title'
 import ButtonGroup from '../components/button-group'
 import NotFound from '../components/not-found-result'
 import { Spinner } from '../components/icons'
-import { Pagination } from "antd";
+import { Pagination } from 'antd'
+import UserItem from '../components/user-list/user-item'
 
 const SearchQuestion = () => {
-
   const router = useRouter()
 
   const [questions, setQuestions] = useState(null)
+  const [blogs, setBlogs] = useState(null)
+  const [users, setUsers] = useState(null)
   const [sortType, setSortType] = useState('Highest Vote')
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
-
 
   useEffect(() => {
     const fetchQuestion = async () => {
       setLoading(true)
 
       try {
-        const res = await publicFetch.get(`/question?key=${router.query.key}&&page=${page}`)
-        const {data, total: totalQuestions} = await res.data
-        
-        setQuestions(data)
+        const res = await publicFetch.get(
+          `/question?key=${router.query.key}&&page=${page}`
+        )
+        const {
+          data: { questions, users, blogs },
+          total: totalQuestions
+        } = await res.data
+        setQuestions(questions)
+        setUsers(users)
+        setBlogs(blogs)
         setTotal(totalQuestions)
-      } catch (error){
+      } catch (error) {
         console.log(error)
       }
-
     }
 
     const fetchQuestionByTag = async () => {
@@ -52,7 +58,6 @@ const SearchQuestion = () => {
       fetchQuestion()
     }
     setLoading(false)
-
   }, [router.query.tag, page, router.query.key])
 
   const handelChange = (page) => {
@@ -74,25 +79,27 @@ const SearchQuestion = () => {
     }
   }
 
-
   return (
     <Layout extra={false}>
       <Head>
         <title>
-          {router.query.tag ? router.query.tag : 'Questions'} -
-          CodingHelper
+          {router.query.tag ? router.query.tag : 'Questions'} - CodingHelper
         </title>
       </Head>
 
-      <PageTitle title={`Search result for [${router.query.key}]` } button borderBottom={false} />
+      <PageTitle
+        title={`Search result for [${router.query.key}]`}
+        button
+        borderBottom={false}
+      />
 
-      <ButtonGroup
+      {/* <ButtonGroup
         borderBottom
-        buttons={['Newest', 'Oldest', 'Highest Vote', 'Highest View', ]}
+        buttons={['Newest', 'Oldest', 'Highest Vote', 'Highest View']}
         selected={sortType}
         setPage={setPage}
         setSelected={setSortType}
-      />
+      /> */}
 
       {loading && (
         <div className="loading">
@@ -132,14 +139,62 @@ const SearchQuestion = () => {
             </QuestionWrapper>
           )
         )}
-        {/* <Pagination page={page} pages={pages} changePage={setPage} /> */}
-        {total != 0 ? <Pagination
+      {users
+        ?.filter((u) => !u?.isBlocked)
+        ?.map(({ username, profilePhoto, created, id, displayName }) => (
+          <QuestionWrapper key={id}>
+            <UserItem
+              key={id}
+              username={username}
+              profilePhoto={profilePhoto}
+              created={created}
+              displayName={displayName}
+            />
+          </QuestionWrapper>
+        ))}
+      {blogs
+        ?.sort(handleSorting())
+        .map(
+          ({
+            id,
+            votes,
+            answers,
+            views,
+            title,
+            text,
+            tags,
+            author,
+            created
+          }) => (
+            <QuestionWrapper key={id}>
+              <QuestionStats
+                voteCount={votes.length}
+                answerCount={answers.length}
+                view={views}
+              />
+              <QuestionSummary
+                id={id}
+                title={title}
+                tags={tags}
+                author={author}
+                createdTime={created}
+              >
+                {text}
+              </QuestionSummary>
+            </QuestionWrapper>
+          )
+        )}
+      {total != 0 ? (
+        <Pagination
           pageSize={10}
           current={page}
           total={total}
           onChange={handelChange}
-          style={{ textAlign: "center", margin: 20}}
-        /> : <NotFound />}
+          style={{ textAlign: 'center', margin: 20 }}
+        />
+      ) : (
+        <NotFound />
+      )}
     </Layout>
   )
 }

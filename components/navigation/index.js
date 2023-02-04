@@ -25,8 +25,8 @@ const Navigation = () => {
       <NavItem href="/tags" selected={router.pathname == '/tags'}>
         <span>Tags</span>
       </NavItem>
-      {console.log(router.pathname.split('/'))}
-      {Object.keys(authState).length > 0 && (
+      {}
+      {Object.keys(authState?.userInfo || {}).length > 0 && (
         <NavItem
           href={`/users/${authState?.userInfo?.username}/edit`}
           selected={router.pathname.split('/')[3] == 'edit'}

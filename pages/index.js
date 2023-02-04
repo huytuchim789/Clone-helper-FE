@@ -11,9 +11,8 @@ import QuestionSummary from '../components/question/question-summary'
 import PageTitle from '../components/page-title'
 import ButtonGroup from '../components/button-group'
 import { Spinner } from '../components/icons'
-import { Button, Pagination } from "antd";
-import { SearchOutlined } from '@ant-design/icons';
-
+import { Button, Pagination } from 'antd'
+import { SearchOutlined } from '@ant-design/icons'
 
 const HomePage = () => {
   const router = useRouter()
@@ -29,11 +28,13 @@ const HomePage = () => {
       setLoading(true)
       try {
         const res = await publicFetch.get(`/question?page=${page}`)
-        const { data, total: totalQuestions } = await res.data
+        const {
+          data: { questions },
+          total: totalQuestions
+        } = await res.data
 
         setTotal(totalQuestions)
-        setQuestions(data)
-        console.log(data)
+        setQuestions(questions)
       } catch (error) {
         console.log(error)
       }
