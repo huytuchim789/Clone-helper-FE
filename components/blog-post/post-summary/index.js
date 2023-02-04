@@ -52,7 +52,10 @@ const PostSummary = ({
   return (
     <div className={styles.postCell}>
       {!editMode ? (
-        <div className={styles.text}>{children}</div>
+        <div
+          className={styles.text}
+          dangerouslySetInnerHTML={{ __html: children }}
+        ></div>
       ) : (
         <Formik
           initialValues={{ text: children }}
@@ -141,7 +144,7 @@ const PostSummary = ({
             </Link>
             <div className={styles.info}>
               <span>
-                {tags ? 'asked' : 'answered'}{' '}
+                {tags ? 'posted' : 'answered'}{' '}
                 {formatDistanceToNowStrict(new Date(created), {
                   addSuffix: true
                 })}
@@ -170,10 +173,7 @@ const PostSummary = ({
                   <></>
                 )}
               </Space>
-
             </>
-
-
           )
         )}
       </div>

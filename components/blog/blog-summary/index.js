@@ -7,20 +7,17 @@ import Tag from '../../tag'
 
 import styles from './question-summary.module.css'
 
-const BlogSummary = ({
-  id,
-  title,
-  tags,
-  author,
-  createdTime,
-  children
-}) => {
+const BlogSummary = ({ id, title, tags, author, createdTime, children }) => {
+  console.log(children)
   return (
     <div className={styles.container}>
       <Link href="/blog/[slug]" as={`/blog/${id}-${slug(title)}`}>
         <a className={styles.link}>{title}</a>
       </Link>
-      <div className={styles.excerpt}>{children}</div>
+      <div
+        className={styles.excerpt}
+        dangerouslySetInnerHTML={{ __html: children }}
+      ></div>
       <div className={styles.footer}>
         <div className={styles.tagContainer}>
           {tags.map((tag) => (
@@ -38,7 +35,7 @@ const BlogSummary = ({
           </Link>
           <div className={styles.info}>
             <span>
-              asked{' '}
+              posted{' '}
               {formatDistanceToNowStrict(new Date(createdTime), {
                 addSuffix: true
               })}

@@ -11,15 +11,16 @@ import FormInput from '../../form-input'
 // import TagInput from '../../tag-input'
 
 import styles from './question-form.module.css'
+import CustomEditor from '../../custom-editor'
 
 const BlogForm = (props) => {
   const router = useRouter()
   const { authAxios } = useContext(FetchContext)
   const [loading, setLoading] = useState(false)
-  console.log(props.blog.title, props.questionId);
+  console.log(props.blog.title, props.questionId)
   return (
     <Formik
-      initialValues={{ title: props.blog.title, text: props.blog.text}}
+      initialValues={{ title: props.blog.title, text: props.blog.text }}
       onSubmit={async (values, { setStatus, resetForm }) => {
         setLoading(true)
         try {
@@ -68,16 +69,14 @@ const BlogForm = (props) => {
               errorMessage={errors.title && errors.title}
               placeholder="e.g Is there an R function for finding the index of an element in a vendor?"
             />
-            <Textarea
-              label="Body"
-              inputInfo="Include all the information someone would need to answer your question"
-              name="text"
-              autoComplete="off"
+            <CustomEditor
               value={values.text}
               onChange={handleChange}
-              onBlur={handleBlur}
-              hasError={touched.text && errors.text}
-              errorMessage={errors.text && errors.text}
+              placeholder={''}
+              keyField="text"
+              setFieldValue={setFieldValue}
+              label="Body"
+              className={styles.editor}
             />
             {/* <TagInput
               label="Tags"

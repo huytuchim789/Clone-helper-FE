@@ -11,6 +11,7 @@ import FormInput from '../../form-input'
 // import TagInput from '../../tag-input'
 
 import styles from './question-form.module.css'
+import CustomEditor from '../../custom-editor'
 
 const BlogForm = () => {
   const router = useRouter()
@@ -69,7 +70,7 @@ const BlogForm = () => {
               errorMessage={errors.title && errors.title}
               placeholder="e.g Is there an R function for finding the index of an element in a vendor?"
             />
-            <Textarea
+            {/* <Textarea
               label="Body"
               inputInfo="Include all the information someone would need to answer your question"
               name="text"
@@ -79,6 +80,15 @@ const BlogForm = () => {
               onBlur={handleBlur}
               hasError={touched.text && errors.text}
               errorMessage={errors.text && errors.text}
+            /> */}
+            <CustomEditor
+              value={values.text}
+              onChange={handleChange}
+              placeholder={''}
+              keyField="text"
+              setFieldValue={setFieldValue}
+              label="Body"
+              className={styles.editor}
             />
             {/* <TagInput
               label="Tags"

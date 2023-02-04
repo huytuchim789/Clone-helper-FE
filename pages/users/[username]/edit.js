@@ -20,6 +20,8 @@ import CustomEditor from '../../../components/custom-editor'
 import FormInput from '../../../components/form-input'
 import { useContext } from 'react'
 import { blobToBase64 } from '../../../util/blobToBase64'
+import { useRouter } from 'next/router'
+import { Select } from 'antd'
 
 const getBase64 = (img, callback) => {
   const reader = new FileReader()
@@ -37,13 +39,18 @@ const beforeUpload = (file) => {
   }
   return isJpgOrPng && isLt2M
 }
+const exps = [
+  { value: '0-3', label: '0-3' },
+  { value: '3-5', label: '3-5' },
+  { value: '> 10', label: '> 10' }
+]
 const UserDetail = ({ username }) => {
   const [loading, setLoading] = useState(false)
   const [userInfo, setUserInfo] = useState(null)
   const [imageUrl, setImageUrl] = useState()
-
   const { authAxios } = useContext(FetchContext)
-
+  const { isAuthenticated, authState } = useContext(AuthContext)
+  const router = useRouter()
   const handleImageChange = (info, setFieldValue) => {
     // if (info.file.status === 'uploading') {
     //   setLoading(true)
@@ -58,6 +65,7 @@ const UserDetail = ({ username }) => {
       })
     }
   }
+
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -87,17 +95,21 @@ const UserDetail = ({ username }) => {
         initialValues={{
           displayName: userInfo?.displayName,
           profile: userInfo?.profile,
-          img: userInfo?.profilePhoto
+          img: userInfo?.profilePhoto,
+          exp: userInfo?.exp
         }}
         onSubmit={async (values, { setStatus, resetForm }) => {
+          setLoading(true)
           if (imageUrl) values.img = imageUrl
           // const img = blobToBase64(values.img)
           try {
             const { data } = await authAxios.post(`/user-edit`, values)
+            setLoading(false)
+
             message.success('Edit Successfully')
           } catch (error) {
             message.error(error.response.data.message)
-            // setStatus(error.response.data.message)
+            setLoading(false)
           }
           // setLoading(false)
         }}
@@ -167,10 +179,22 @@ const UserDetail = ({ username }) => {
                     value={values.profile}
                     onChange={handleChange}
                     placeholder={''}
+                    keyField="profile"
                     setFieldValue={setFieldValue}
                     label="Profile"
                     className={styles.editor}
                   />
+                  <h2 style={{ fontWeight: 'bold' }}>Experience years</h2>
+
+                  <Select
+                    name="exp"
+                    value={values.exp}
+                    style={{ width: 120 }}
+                    onChange={(value) => {
+                      setFieldValue('exp', value)
+                    }}
+                    options={exps}
+                  ></Select>
                   <p className={styles.status}>{status}</p>
                   <div className={styles.button}>
                     <Button
