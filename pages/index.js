@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
@@ -13,6 +13,7 @@ import ButtonGroup from '../components/button-group'
 import { Spinner } from '../components/icons'
 import { Button, Pagination } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
+import { AuthContext } from '../store/auth'
 
 const HomePage = () => {
   const router = useRouter()
@@ -22,12 +23,18 @@ const HomePage = () => {
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
+  const [checked, setChecked] = useState(false)
+  const { authState } = useContext(AuthContext)
 
   useEffect(() => {
     const fetchQuestion = async () => {
       setLoading(true)
       try {
-        const res = await publicFetch.get(`/question?page=${page}`)
+        const res = await publicFetch.get(
+          `/question?page=${page}&${
+            checked ? 'exp=' + authState?.userInfo?.exp : ''
+          }`
+        )
         const {
           data: { questions },
           total: totalQuestions
@@ -44,6 +51,7 @@ const HomePage = () => {
       const { data } = await publicFetch.get(`/questions/${router.query.tag}`)
       setQuestions(data)
     }
+    console.log('here')
 
     if (router.query.tag) {
       fetchQuestionByTag()
@@ -51,7 +59,7 @@ const HomePage = () => {
       fetchQuestion()
     }
     setLoading(false)
-  }, [router.query.tag, page])
+  }, [router.query.tag, page, checked])
 
   const handelChange = (page) => {
     setPage(page)
@@ -96,6 +104,9 @@ const HomePage = () => {
         selected={sortType}
         setPage={setPage}
         setSelected={setSortType}
+        checked={checked}
+        setChecked={setChecked}
+        yourComunity={authState?.userInfo?.exp}
       />
 
       {loading && (
@@ -109,7 +120,7 @@ const HomePage = () => {
         .filter((a) => !a?.isBlocked)
         .map(
           ({
-            id,
+            _id: id,
             votes,
             answers,
             views,
