@@ -24,7 +24,7 @@ const ButtonGroup = ({
   console.log(isAuthenticated)
   return (
     <div>
-      {isAuthenticated() && (
+      {/* {isAuthenticated() && (
         <Space style={{ marginLeft: '20px' }}>
           <h2 style={{ fontWeight: 'bold', fontSize: '15px' }}>
             Join Comuinity:{' '}
@@ -39,7 +39,7 @@ const ButtonGroup = ({
             }}
           />
         </Space>
-      )}
+      )} */}
       <div
         className={cn(styles.container, borderBottom && styles.borderBottom)}
       >

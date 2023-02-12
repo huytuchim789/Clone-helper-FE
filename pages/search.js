@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 
@@ -13,38 +13,27 @@ import ButtonGroup from '../components/button-group'
 import NotFound from '../components/not-found-result'
 import { Spinner } from '../components/icons'
 import { Pagination } from 'antd'
-import UserItem from '../components/user-list/user-item'
-import { AuthContext } from '../store/auth'
 
 const SearchQuestion = () => {
   const router = useRouter()
 
   const [questions, setQuestions] = useState(null)
-  const [blogs, setBlogs] = useState(null)
-  const [users, setUsers] = useState(null)
-  const [sortType, setSortType] = useState('Highest Vote')
+  const [sortType, setSortType] = useState('Newest')
   const [page, setPage] = useState(1)
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(false)
-  const [checked, setChecked] = useState(false)
-  const { authState } = useContext(AuthContext)
+
   useEffect(() => {
     const fetchQuestion = async () => {
       setLoading(true)
 
       try {
         const res = await publicFetch.get(
-          `/question?key=${router.query.key}&&page=${page}&&${
-            checked ? 'exp=' + authState?.userInfo?.exp : ''
-          }`
+          `/question?key=${router.query.key}&&page=${page}`
         )
-        const {
-          data: { questions, users, blogs },
-          total: totalQuestions
-        } = await res.data
-        setQuestions(questions)
-        setUsers(users)
-        setBlogs(blogs)
+        const { data, total: totalQuestions } = await res.data
+
+        setQuestions(data)
         setTotal(totalQuestions)
       } catch (error) {
         console.log(error)
@@ -55,23 +44,20 @@ const SearchQuestion = () => {
       const { data } = await publicFetch.get(`/questions/${router.query.tag}`)
       setQuestions(data)
     }
-    console.log('here')
+
     if (router.query.tag) {
       fetchQuestionByTag()
     } else {
       fetchQuestion()
     }
     setLoading(false)
-  }, [router.query.tag, page, router.query.key, checked])
+  }, [router.query.tag, page, router.query.key])
 
   const handelChange = (page) => {
     setPage(page)
   }
 
   const handleSorting = () => {
-    // if (checked) {
-
-    // }
     switch (sortType) {
       case 'Highest Vote':
         return (a, b) => b.score - a.score
@@ -106,9 +92,6 @@ const SearchQuestion = () => {
         selected={sortType}
         setPage={setPage}
         setSelected={setSortType}
-        checked={checked}
-        setChecked={setChecked}
-        yourComunity={authState?.userInfo?.exp}
       />
 
       {loading && (
@@ -118,51 +101,6 @@ const SearchQuestion = () => {
       )}
 
       {questions
-        ?.sort(handleSorting())
-        .map(
-          ({
-            _id: id,
-            votes,
-            answers,
-            views,
-            title,
-            text,
-            tags,
-            author,
-            created
-          }) => (
-            <QuestionWrapper key={id}>
-              <QuestionStats
-                voteCount={votes.length}
-                answerCount={answers.length}
-                view={views}
-              />
-              <QuestionSummary
-                id={id}
-                title={title}
-                tags={tags}
-                author={author}
-                createdTime={created}
-              >
-                {text}
-              </QuestionSummary>
-            </QuestionWrapper>
-          )
-        )}
-      {users
-        ?.filter((u) => !u?.isBlocked)
-        ?.map(({ username, profilePhoto, created, id, displayName }) => (
-          <QuestionWrapper key={id}>
-            <UserItem
-              key={id}
-              username={username}
-              profilePhoto={profilePhoto}
-              created={created}
-              displayName={displayName}
-            />
-          </QuestionWrapper>
-        ))}
-      {blogs
         ?.sort(handleSorting())
         .map(
           ({
@@ -194,6 +132,7 @@ const SearchQuestion = () => {
             </QuestionWrapper>
           )
         )}
+      {/* <Pagination page={page} pages={pages} changePage={setPage} /> */}
       {total != 0 ? (
         <Pagination
           pageSize={10}

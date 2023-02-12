@@ -40,7 +40,7 @@ const PageTitle = ({
         <div className={styles.buttonContainer}>
           {button && (
             <Space>
-              {isAdmin && !isBlog && question?.id && (
+              {isAdmin() && !isBlog && question?.id && (
                 <Button
                   onClick={blockQuestion}
                   style={{ backgroundColor: 'red' }}
@@ -49,24 +49,31 @@ const PageTitle = ({
                   Block
                 </Button>
               )}
-              {!isBlog && <Button
-                href={isAuthenticated() ? '/questions/ask' : '/auth'}
-                primary
-              >
-                Ask Question
-              </Button>}
-              {isBlog && <Button
-                href={isAuthenticated() ? '/blog/create' : '/auth'}
-                primary
-              >
-                Create my Blog
-              </Button>}
-              {isBlog && authState.userInfo?.username === question?.author?.username && <Button
-                href={isAuthenticated() ? `/blog/${blogId}/edit` : '/auth'}
-                secondary
-              >
-                Edit
-              </Button>}
+              {!isBlog && (
+                <Button
+                  href={isAuthenticated() ? '/questions/ask' : '/auth'}
+                  primary
+                >
+                  Ask Question
+                </Button>
+              )}
+              {isBlog && (
+                <Button
+                  href={isAuthenticated() ? '/blog/create' : '/auth'}
+                  primary
+                >
+                  Create my Blog
+                </Button>
+              )}
+              {isBlog &&
+                authState.userInfo?.username === question?.author?.username && (
+                  <Button
+                    href={isAuthenticated() ? `/blog/${blogId}/edit` : '/auth'}
+                    secondary
+                  >
+                    Edit
+                  </Button>
+                )}
             </Space>
           )}
         </div>
