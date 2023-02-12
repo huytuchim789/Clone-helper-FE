@@ -18,7 +18,7 @@ const { Paragraph } = Typography
 const UserAvatar = ({ username }) => {
   const [userInfo, setUserInfo] = useState(null)
   const [isFollow, setIsFollow] = useState(false)
-  const { authState } = useContext(AuthContext)
+  const { authState, isAuthenticated } = useContext(AuthContext)
   const { authAxios } = useContext(FetchContext)
   console.log(authState)
   useEffect(() => {
