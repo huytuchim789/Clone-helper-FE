@@ -136,7 +136,7 @@ const HomePage = () => {
           )
         )}
       <Pagination
-        pageSize={10}
+        pageSize={6}
         current={page}
         total={total}
         onChange={handelChange}

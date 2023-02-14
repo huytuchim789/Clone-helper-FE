@@ -149,7 +149,7 @@ const SearchBlog = () => {
         )}
       {total != 0 ? (
         <Pagination
-          pageSize={10}
+          pageSize={6}
           current={page}
           total={total}
           onChange={handelChange}

@@ -31,14 +31,13 @@ function Blog() {
 
         setTotal(totalQuestions)
         setBlogs(data)
-        console.log(data)
       } catch (error) {
         console.log(error)
       }
     }
     fetchBlog()
     setLoading(false)
-  }, [])
+  }, [page])
 
   const handelChange = (page) => {
     setPage(page)
@@ -87,7 +86,7 @@ function Blog() {
         )
       )}
       <Pagination
-        pageSize={10}
+        pageSize={6}
         current={page}
         total={total}
         onChange={handelChange}
